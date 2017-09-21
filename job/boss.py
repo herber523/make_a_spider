@@ -8,9 +8,9 @@ r = redis.Redis()
 
 
 class Boss():
-    def __init__(self):
+    def __init__(self,process=4):
         self.r = redis.Redis(host='localhost',port=6379,db=0)
-        self.pool = Pool(processes=12)
+        self.pool = Pool(processes=process)
         self.r.delete('job')
         self.r.delete('waitjob')
         self.r.delete('overjob')
@@ -18,7 +18,6 @@ class Boss():
     def run(self):
         r = self.r
         while True:
-            print('get job')
             job = r.brpop('job')
             jstr = job[1].decode('utf-8').split(';')
             j_func = jstr[0]

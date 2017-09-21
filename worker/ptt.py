@@ -28,7 +28,6 @@ def page_parse(board,start,end):
         job.add_job('ptt',data_parse,'https://www.ptt.cc/bbs/' + board + '/index%d.html' % i)
 
 def data_parse(url):
-    print(url)
     job = Job()
     page_data = []
     res = requests.get(
@@ -69,11 +68,12 @@ def return_data():
 
     while True:
         time.sleep(2)
-        print('wait', r.get('waitjob'),'over', r.get('overjob'))
+        wait = int(r.get('waitjob'))
+        over = int(r.get('overjob'))
+        print('wait',over,'/',wait)
         if r.get('waitjob') == r.get('overjob'):
+            time.sleep(2)
             break
-        else:
-            print('wait')
 
     data = r.lrange('ptt',0,-1)
     for d in data:
@@ -84,6 +84,5 @@ def return_data():
 def run(board,start=0,end=-1):
     if end == -1:
         end = last_page(board)
-
     page_parse(board,start,end)
     return return_data()

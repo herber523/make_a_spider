@@ -16,8 +16,8 @@ if not args.e:
 if not args.b:
     print('plase input board name')
 board = args.b
-start = args.s
-end = args.e
+start = int(args.s)
+end = int(args.e)
 filename = args.o
 data = ptt.run(board,start,end)
 data = json.loads(data)
