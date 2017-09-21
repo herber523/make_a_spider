@@ -2,10 +2,11 @@ import redis
 
 class Job():
     def __init__(self):
-        self.r = redis.Redis(host='localhost',port=6379,db=0)        
+        self.r = redis.Redis()        
     
-    def proc_async(self,function,arg):
+    def add_job(self,f,function,arg):
         r = self.r
         f_name = function.__name__
-        job_msg = f_name + ';' + arg
+        job_msg = f+'.'+f_name + ';' + arg
+        r.incr('waitjob')
         r.lpush('job', job_msg)

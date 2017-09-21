@@ -1,12 +1,33 @@
+import sys
 import redis
+import time
+from multiprocessing import Pool
+sys.path.append('..')
+import worker.ptt as ptt
+r = redis.Redis()
+
+
 class Boss():
     def __init__(self):
         self.r = redis.Redis(host='localhost',port=6379,db=0)
-    def run(self,thread_num=4):
+        self.pool = Pool(processes=12)
+        self.r.delete('job')
+        self.r.delete('waitjob')
+        self.r.delete('overjob')
+        print('init')
+    def run(self):
         r = self.r
         while True:
-            job = r.blpop('job')
+            print('get job')
+            job = r.brpop('job')
             jstr = job[1].decode('utf-8').split(';')
             j_func = jstr[0]
             j_arg = jstr[1]
-            eval(j_func)(j_arg)
+            print(j_arg)
+            self.pool.apply_async(run_func,args=(j_func,j_arg,))
+
+
+
+def run_func(func_name,func_arg):
+    r.incr('overjob')
+    eval(func_name)(func_arg)
