@@ -5,6 +5,7 @@ from multiprocessing import Pool
 sys.path.append('..')
 import worker.ptt as ptt
 import worker.thu as thu
+import worker.s591 as s591
 r = redis.Redis()
 
 
