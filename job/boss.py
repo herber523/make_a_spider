@@ -4,6 +4,7 @@ import time
 from multiprocessing import Pool
 sys.path.append('..')
 import worker.ptt as ptt
+import worker.thu as thu
 r = redis.Redis()
 
 
